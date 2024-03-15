@@ -13,7 +13,7 @@ public class GameController {
     }
 
     public void displayBoard(Game game){
-
+        game.getCurrentBoard().displayBoard();
     }
 
     public GameStatus getGameStatus(Game game){

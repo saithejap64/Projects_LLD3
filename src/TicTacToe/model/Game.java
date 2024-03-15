@@ -19,16 +19,17 @@ public class Game {
     private WinningStrategy winningStrategy;
     private int numberOfSymbols;
 
-    private Game(Board currentBoard, List<Player> players, Player currentPlayer, GameStatus gameStatus, List<Move> moves, List<Board> boardStatus, WinningStrategy winningStrategy, int numberOfSymbols) {
+    private Game(Board currentBoard, List<Player> players, WinningStrategy winningStrategy) {
         this.currentBoard = currentBoard;
         this.players = players;
-        this.currentPlayer = currentPlayer;
+        this.currentPlayer = null;
         this.gameStatus = GameStatus.IN_PROGRESS;
         this.moves = new ArrayList<>();
         this.boardStatus = new ArrayList<>();
         this.winningStrategy = winningStrategy;
         this.numberOfSymbols = players.size();
     }
+
 
     public Board getCurrentBoard() {
         return currentBoard;
@@ -98,12 +99,14 @@ public class Game {
     public static class Builder{
         private Board currentBoard;
         private List<Player> players;
-        private Player currentPlayer;
-        private GameStatus gameStatus;
-        private List<Move> moves;
-        private List<Board> boardStatus;
+        private int dimension;
         private WinningStrategy winningStrategy;
-        private int numberOfSymbols;
+//        private Player currentPlayer;
+//        private GameStatus gameStatus;
+//        private List<Move> moves;
+//        private List<Board> boardStatus;
+//        private int numberOfSymbols;
+
 
         public Builder setCurrentBoard(Board currentBoard) {
             this.currentBoard = currentBoard;
@@ -115,23 +118,8 @@ public class Game {
             return this;
         }
 
-        public Builder setCurrentPlayer(Player currentPlayer) {
-            this.currentPlayer = currentPlayer;
-            return this;
-        }
-
-        public Builder setGameStatus(GameStatus gameStatus) {
-            this.gameStatus = gameStatus;
-            return this;
-        }
-
-        public Builder setMoves(List<Move> moves) {
-            this.moves = moves;
-            return this;
-        }
-
-        public Builder setBoardStatus(List<Board> boardStatus) {
-            this.boardStatus = boardStatus;
+        public Builder setDimension(int dimension) {
+            this.dimension = dimension;
             return this;
         }
 
@@ -140,10 +128,31 @@ public class Game {
             return this;
         }
 
-        public Builder setNumberOfSymbols(int numberOfSymbols) {
-            this.numberOfSymbols = numberOfSymbols;
-            return this;
-        }
+//        public Builder setCurrentPlayer(Player currentPlayer) {
+//            this.currentPlayer = currentPlayer;
+//            return this;
+//        }
+
+//        public Builder setGameStatus(GameStatus gameStatus) {
+//            this.gameStatus = gameStatus;
+//            return this;
+//        }
+
+//        public Builder setMoves(List<Move> moves) {
+//            this.moves = moves;
+//            return this;
+//        }
+//
+//        public Builder setBoardStatus(List<Board> boardStatus) {
+//            this.boardStatus = boardStatus;
+//            return this;
+//        }
+
+
+//        public Builder setNumberOfSymbols(int numberOfSymbols) {
+//            this.numberOfSymbols = numberOfSymbols;
+//            return this;
+//        }
 
         private void validateNumberOfPlayers(){
             //TODO: Convert below code into lambda expressions using streams
@@ -154,7 +163,7 @@ public class Game {
             }
         }
 
-        private void ValidatePlayerSymbols(){
+        private void validatePlayerSymbols(){
             //TODO: Convert below code into lambda expressions using streams
             HashSet<Character> symbols=new HashSet<>();
             for(Player player: players){
@@ -166,7 +175,7 @@ public class Game {
             }
         }
 
-        private void ValidateBotCount(){
+        private void validateBotCount(){
             //TODO: Convert below code into lambda expressions using streams
             int botCount=0;
             for(Player player: players){
@@ -176,6 +185,17 @@ public class Game {
             if(botCount>1 || botCount<0){
                 throw new InvalidBotCountException("We can have maximum of 1 bot per game");
             }
+        }
+
+        private void validate(){
+            validateNumberOfPlayers();
+            validateBotCount();
+            validatePlayerSymbols();
+        }
+
+        public Game build(){
+            validate();
+            return new Game(new Board(dimension),players,winningStrategy);
         }
     }
 }
