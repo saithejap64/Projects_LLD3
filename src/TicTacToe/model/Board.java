@@ -29,6 +29,14 @@ public class Board {
         }
     }
 
+    public List<List<Cell>> getMatrix() {
+        return matrix;
+    }
+
+    public void setMatrix(List<List<Cell>> matrix) {
+        this.matrix = matrix;
+    }
+
     public int getDimension() {
         return dimension;
     }
